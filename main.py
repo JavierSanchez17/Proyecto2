@@ -92,7 +92,7 @@ class VentanaPilaCola:
         cantidad = len(self.elementos)
         self.label_cantidad.config(text=f'Cantidad de elementos: {cantidad}')
         if cantidad > 0:
-            self.label_primero.config(text=f'Primero elemento: {self.elementos[cantidad-1]}')
+            self.label_primero.config(text=f'Primero elemento: {self.elementos[cantidad - 1]}')
             self.label_ultimo.config(text=f'Ultimo elemento: {self.elementos[0]}')
         self.dato_encontrado.config(text='')
 
@@ -101,7 +101,8 @@ class VentanaPilaCola:
         y = self.top
         for elemento in self.elementos:
             x = (self.canvas_width - self.rect_width) / 2
-            self.canvas.create_rectangle(x, y, x + self.rect_width, y + self.rect_height, outline="black", fill="lightblue")
+            self.canvas.create_rectangle(x, y, x + self.rect_width, y + self.rect_height, outline="black",
+                                         fill="lightblue")
             self.canvas.create_text(x + self.rect_width / 2, y + self.rect_height / 2, text=elemento, fill="black")
             if self.tipo == 'pila':
                 y -= self.rect_height + self.rect_spacing
@@ -261,7 +262,8 @@ class VentanaListaSimple:
         x = self.rect_spacing
         nodo_actual = self.primer_nodo
         while nodo_actual:
-            self.canvas.create_rectangle(x, self.top - self.rect_height // 2, x + self.rect_width, self.top + self.rect_height // 2, outline='black', fill='lightblue')
+            self.canvas.create_rectangle(x, self.top - self.rect_height // 2, x + self.rect_width,
+                                         self.top + self.rect_height // 2, outline='black', fill='lightblue')
             self.canvas.create_text(x + self.rect_width // 2, self.top, text=nodo_actual.data, fill='black')
             x += self.rect_width + self.rect_spacing
             self.flecha(x, self.top)
@@ -487,7 +489,8 @@ class VentanaListaCircular:
         x = self.rect_spacing
         nodo_actual = self.primer_nodo
         while nodo_actual:
-            self.canvas.create_rectangle(x, self.top - self.rect_height // 2, x + self.rect_width, self.top + self.rect_height // 2, outline='black', fill='lightblue')
+            self.canvas.create_rectangle(x, self.top - self.rect_height // 2, x + self.rect_width,
+                                         self.top + self.rect_height // 2, outline='black', fill='lightblue')
             self.canvas.create_text(x + self.rect_width // 2, self.top, text=nodo_actual.data, fill='black')
             x += self.rect_width + self.rect_spacing
             self.flecha(x, self.top)
@@ -985,7 +988,8 @@ class VentanaListaCircularDoble:
         x = self.rect_spacing
         nodo_actual = self.primer_nodo
         while nodo_actual:
-            self.canvas.create_rectangle(x, self.top - self.rect_height // 2, x + self.rect_width, self.top + self.rect_height // 2, outline='black', fill='lightblue')
+            self.canvas.create_rectangle(x, self.top - self.rect_height // 2, x + self.rect_width,
+                                         self.top + self.rect_height // 2, outline='black', fill='lightblue')
             self.canvas.create_text(x + self.rect_width // 2, self.top, text=nodo_actual.data, fill='black')
             x += self.rect_width + self.rect_spacing
             self.flecha(x, self.top + 5)
@@ -1096,11 +1100,8 @@ class VentanaArbolBinario:
         self.dato = tk.Entry(self.frame)
         self.dato.pack(side=tk.LEFT)
 
-        self.boton_insertari = tk.Button(self.frame, text='Insertar a la izquierda', command=self.insertar_izquierda)
+        self.boton_insertari = tk.Button(self.frame, text='Insertar', command=self.insertar)
         self.boton_insertari.pack(side=tk.LEFT)
-
-        self.boton_insertard = tk.Button(self.frame, text='Insertar a la derecha', command=self.insertar_derecha)
-        self.boton_insertard.pack(side=tk.LEFT)
 
         self.boton_borrari = tk.Button(self.frame, text='Borrar', command=self.eliminar)
         self.boton_borrari.pack(side=tk.LEFT)
@@ -1108,7 +1109,7 @@ class VentanaArbolBinario:
         self.nivel = tk.Label(self.info_frame, text='Nivel del árbol: -')
         self.nivel.pack()
 
-        self.tamanio = tk.Label(self.info_frame, text='Tamaño del árbol: 0')
+        self.tamanio = tk.Label(self.info_frame, text='Nodos en el árbol: 0')
         self.tamanio.pack()
 
         self.raiz_info = tk.Label(self.info_frame, text='El valor de la raiz: -')
@@ -1129,41 +1130,83 @@ class VentanaArbolBinario:
         self.boton_abrir = tk.Button(self.info_frame, text='Abrir', command=self.abrir)
         self.boton_abrir.pack(side=tk.LEFT)
 
-    def insertar_izquierda(self):
+    def insertar(self):
         valor = self.dato.get()
         if valor:
             nuevo_nodo = NodoArbolBinario(valor)
-            if not self.raiz:
+            if self.raiz is None:
                 self.raiz = nuevo_nodo
             else:
-                self.insertar_izquierda_metodo(self.raiz, nuevo_nodo)
+                self.insertar_nodo(self.raiz, nuevo_nodo)
             self.dibujar_arbol()
             self.info()
             self.dato.delete(0, tk.END)
 
-    def insertar_izquierda_metodo(self, padre, nuevo_nodo):
-        if padre.izquierda is None:
-            padre.izquierda = nuevo_nodo
-        else:
-            self.insertar_izquierda_metodo(padre.izquierda, nuevo_nodo)
-
-    def insertar_derecha(self):
-        valor = self.dato.get()
-        if valor:
-            nuevo_nodo = NodoArbolBinario(valor)
-            if not self.raiz:
-                self.raiz = nuevo_nodo
+    def insertar_nodo(self, nodo, nuevo_nodo):
+        if int(nuevo_nodo.data) < int(nodo.data):
+            if nodo.izquierda is None:
+                nodo.izquierda = nuevo_nodo
             else:
-                self.insertar_derecha_metodo(self.raiz, nuevo_nodo)
-            self.dibujar_arbol()
-            self.info()
-            self.dato.delete(0, tk.END)
-
-    def insertar_derecha_metodo(self, padre, nuevo_nodo):
-        if padre.derecha is None:
-            padre.derecha = nuevo_nodo
+                self.insertar_nodo(nodo.izquierda, nuevo_nodo)
         else:
-            self.insertar_derecha_metodo(padre.derecha, nuevo_nodo)
+            if nodo.derecha is None:
+                nodo.derecha = nuevo_nodo
+            else:
+                self.insertar_nodo(nodo.derecha, nuevo_nodo)
+
+    # Se intento realizar la inserción de izquierda a derecha pero nunca vimos como configurar la eliminacion o la
+    # busqueda a esa manera de insercion y se realizo de manera automatica
+    # def insertar_izquierda(self):
+    #     valor = self.dato.get()
+    #     if valor:
+    #         posicion = simpledialog.askinteger('Insertar a la izquierda', 'Ingrese el nodo al cual insertar a la izquierda: ')
+    #         if posicion is not None:
+    #             nuevo_nodo = NodoArbolBinario(valor)
+    #             self.insertar_izquierda_metodo(self.raiz, nuevo_nodo, posicion)
+    #             self.dibujar_arbol()
+    #             self.info()
+    #             self.dato.delete(0, tk.END)
+    #
+    # def insertar_izquierda_metodo(self, padre, nuevo_nodo, posicion):
+    #     if padre is not None:
+    #         if int(padre.data) == posicion:
+    #             if padre.izquierda is None:
+    #                 padre.izquierda = nuevo_nodo
+    #             else:
+    #                 self.dato_encontrado.config(text='Este nodo ya contiene hijo izquierdo')
+    #         else:
+    #             if padre.izquierda is not None:
+    #                 self.insertar_izquierda_metodo(padre.izquierda, nuevo_nodo, posicion)
+    #             if padre.derecha is not None:
+    #                 self.insertar_izquierda_metodo(padre.derecha, nuevo_nodo, posicion)
+    #     elif padre is None:
+    #         self.raiz = nuevo_nodo
+    #
+    # def insertar_derecha(self):
+    #     valor = self.dato.get()
+    #     if valor:
+    #         posicion = simpledialog.askinteger('Insertar a la derecha', 'Ingresa el nodo al cual insertar a la derecha: ')
+    #         if posicion is not None:
+    #             nuevo_nodo = NodoArbolBinario(valor)
+    #             self.insertar_derecha_metodo(self.raiz, nuevo_nodo, posicion)
+    #             self.dibujar_arbol()
+    #             self.info()
+    #             self.dato.delete(0, tk.END)
+    #
+    # def insertar_derecha_metodo(self, padre, nuevo_nodo, posicion):
+    #     if padre is not None:
+    #         if int(padre.data) == posicion:
+    #             if padre.derecha is None:
+    #                 padre.derecha = nuevo_nodo
+    #             else:
+    #                 self.dato_encontrado.config(text='Este nodo ya contiene hijo derecho')
+    #         else:
+    #             if padre.izquierda is not None:
+    #                 self.insertar_derecha_metodo(padre.izquierda, nuevo_nodo, posicion)
+    #             if padre.derecha is not None:
+    #                 self.insertar_derecha_metodo(padre.derecha, nuevo_nodo, posicion)
+    #     elif padre is None:
+    #         self.raiz = nuevo_nodo
 
     def eliminar(self):
         valor_eliminar = self.dato.get()
@@ -1178,9 +1221,9 @@ class VentanaArbolBinario:
     def eliminar_valor(self, nodo, valor):
         if nodo is None:
             return nodo
-        if valor < nodo.data:
+        if int(valor) < int(nodo.data):
             nodo.izquierda = self.eliminar_valor(nodo.izquierda, valor)
-        elif valor > nodo.data:
+        elif int(valor) > int(nodo.data):
             nodo.derecha = self.eliminar_valor(nodo.derecha, valor)
         else:
             if nodo.izquierda is None:
@@ -1218,9 +1261,9 @@ class VentanaArbolBinario:
     def buscar_valor(self, nodo, valor):
         if nodo is None:
             return False
-        elif nodo.data == valor:
+        elif int(nodo.data) == int(valor):
             return True
-        elif valor < nodo.data:
+        elif int(valor) < int(nodo.data):
             return self.buscar_valor(nodo.izquierda, valor)
         else:
             return self.buscar_valor(nodo.derecha, valor)
@@ -1298,12 +1341,12 @@ class VentanaArbolBinario:
             self.insertar_desde_archivo_recursivo(valor, self.raiz)
 
     def insertar_desde_archivo_recursivo(self, valor, nodo):
-        if valor < nodo.data:
+        if int(valor) < int(nodo.data):
             if nodo.izquierda is None:
                 nodo.izquierda = NodoArbolBinario(valor)
             else:
                 self.insertar_desde_archivo_recursivo(valor, nodo.izquierda)
-        elif valor > nodo.data:
+        elif int(valor) > int(nodo.data):
             if nodo.derecha is None:
                 nodo.derecha = NodoArbolBinario(valor)
             else:
@@ -1363,23 +1406,27 @@ def main():
     boton_pila = tk.Button(principal, text="PILA", width=30, font=("Arial Black", 12), command=pila)
     boton_pila.pack(padx=5, pady=5)
 
-    boton_cola = tk.Button(principal, text="COLA",  width=30, font=("Arial Black", 12), command=cola)
+    boton_cola = tk.Button(principal, text="COLA", width=30, font=("Arial Black", 12), command=cola)
     boton_cola.pack(padx=5, pady=5)
 
-    boton_lista_simple = tk.Button(principal, text="LISTA SIMPLE",  width=30, font=("Arial Black", 12), command=lista_simple)
+    boton_lista_simple = tk.Button(principal, text="LISTA SIMPLE", width=30, font=("Arial Black", 12),
+                                   command=lista_simple)
     boton_lista_simple.pack(padx=5, pady=5)
 
-    boton_lista_circular = tk.Button(principal, text="LISTA CIRCULAR",  width=30, font=("Arial Black", 12), command=lista_circular)
+    boton_lista_circular = tk.Button(principal, text="LISTA CIRCULAR", width=30, font=("Arial Black", 12),
+                                     command=lista_circular)
     boton_lista_circular.pack(padx=5, pady=5)
 
-    boton_lista_doble = tk.Button(principal, text="LISTA DOBLE",  width=30, font=("Arial Black", 12), command=lista_doble)
+    boton_lista_doble = tk.Button(principal, text="LISTA DOBLE", width=30, font=("Arial Black", 12),
+                                  command=lista_doble)
     boton_lista_doble.pack(padx=5, pady=5)
 
-    boton_lista_doble_circular = tk.Button(principal, text="LISTA DOBLE CIRCULAR",  width=30, font=("Arial Black", 12),
+    boton_lista_doble_circular = tk.Button(principal, text="LISTA DOBLE CIRCULAR", width=30, font=("Arial Black", 12),
                                            command=lista_doble_circular)
     boton_lista_doble_circular.pack(padx=5, pady=5)
 
-    boton_arbol_binario = tk.Button(principal, text="ARBOL BINARIO",  width=30, font=("Arial Black", 12), command=arbol_binario)
+    boton_arbol_binario = tk.Button(principal, text="ARBOL BINARIO", width=30, font=("Arial Black", 12),
+                                    command=arbol_binario)
     boton_arbol_binario.pack(padx=5, pady=5)
 
     principal.mainloop()
